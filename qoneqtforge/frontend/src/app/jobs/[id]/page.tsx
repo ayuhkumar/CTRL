@@ -27,7 +27,13 @@ export default function JobPage() {
     let logId = 0;
     const cleanup = subscribeToJob(id, (event: SSEEvent) => {
       if (event.type === 'log') {
-        setLogs(prev => [...prev, { id: logId++, ...event.data, timestamp: event.timestamp }]);
+        setLogs(prev => [...prev, { 
+          id: logId++, 
+          level: String(event.data.level || 'info'),
+          stage: String(event.data.stage || 'unknown'),
+          message: String(event.data.message || ''),
+          timestamp: event.timestamp 
+        }]);
       } else if (['stage_start', 'stage_complete', 'stage_failed', 'job_complete', 'job_failed'].includes(event.type)) {
         getJob(id).then(setJob).catch(console.error);
         if (event.type === 'job_complete' || event.type === 'job_failed') setIsLive(false);
