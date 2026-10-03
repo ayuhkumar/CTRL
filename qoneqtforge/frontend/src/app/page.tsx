@@ -14,12 +14,18 @@ export default function HomePage() {
   const [duration, setDuration] = useState(30);
   const [style, setStyle] = useState('cinematic');
   const [isLoading, setIsLoading] = useState(false);
-  const [trends, setTrends] = useState<TrendItem[]>([]);
-  const [showOptions, setShowOptions] = useState(false);
-
-  useEffect(() => {
-    getTrends('all').then(setTrends).catch(console.error);
-  }, []);
+  const [trends, setTrends] = useState<TrendItem[]>([
+    { title: "The Secret AI Tool That Replaces a Full Dev Team", source: "Curated", url: null, score: null },
+    { title: "Why Everyone is Moving to Next.js in 2026", source: "Curated", url: null, score: null },
+    { title: "The Truth About the New Quantum Breakthrough", source: "Curated", url: null, score: null },
+    { title: "How to Master Fasting for Ultimate Productivity", source: "Curated", url: null, score: null },
+    { title: "The Crazy Economics Behind the PS6 Launch", source: "Curated", url: null, score: null },
+    { title: "Why AI Agents Are Taking Over Wall Street", source: "Curated", url: null, score: null },
+    { title: "The Hidden Dangers of Neuralink", source: "Curated", url: null, score: null },
+    { title: "Top 5 Places to Live as a Digital Nomad", source: "Curated", url: null, score: null },
+    { title: "The Rise of Solo Billionaires in Tech", source: "Curated", url: null, score: null },
+    { title: "How to Build a Startup in 24 Hours with AI", source: "Curated", url: null, score: null }
+  ]);
 
   const handleGenerate = async () => {
     if (!topic.trim()) return;
@@ -109,44 +115,7 @@ export default function HomePage() {
 
           <div className="flex justify-between items-center px-4 pt-4 pb-2">
             <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Press Enter to forge</span>
-            <button
-              onClick={() => setShowOptions(!showOptions)}
-              className="text-xs font-bold text-slate-500 hover:text-blue-600 transition-colors flex items-center gap-1.5 uppercase tracking-wider bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200 hover:border-blue-200 hover:bg-blue-50"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-              </svg>
-              {showOptions ? 'Hide Config' : 'Configuration'}
-            </button>
           </div>
-
-          {/* Configuration Drawer */}
-          {showOptions && (
-            <div className="p-5 mt-2 border-t border-slate-100 bg-slate-50/50 rounded-b-xl grid grid-cols-2 md:grid-cols-3 gap-6">
-              {[
-                { label: 'Community Target', value: community, setter: setCommunity, options: COMMUNITY_OPTIONS },
-                { label: 'Narrative Tone', value: tone, setter: setTone, options: TONE_OPTIONS },
-                { label: 'Language', value: language, setter: setLanguage, options: LANGUAGE_OPTIONS },
-                { label: 'Target Duration', value: String(duration), setter: (v: string) => setDuration(Number(v)), options: DURATION_OPTIONS.map(o => ({ value: String(o.value), label: o.label })) },
-                { label: 'Visual Style', value: style, setter: setStyle, options: STYLE_OPTIONS },
-              ].map((field) => (
-                <div key={field.label}>
-                  <label className="text-xs font-bold text-slate-500 mb-2 block uppercase tracking-wider">
-                    {field.label}
-                  </label>
-                  <select
-                    value={field.value}
-                    onChange={(e) => field.setter(e.target.value)}
-                    className="input-premium font-medium text-slate-700 shadow-sm"
-                  >
-                    {field.options.map((o) => (
-                      <option key={o.value} value={o.value}>{o.label}</option>
-                    ))}
-                  </select>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </div>
 

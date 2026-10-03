@@ -48,13 +48,21 @@ async def run(
     scene_audios = []
     total_duration = 0.0
 
+    last_successful_image = None
+    
     for i, scene in enumerate(scene_plan.scenes):
         image_path = get_scene_image_path(job_id, scene.idx)
         audio_path = get_scene_audio_path(job_id, scene.idx)
 
         if not image_path.exists():
-            logger.warning("[%s] Scene %d image missing, skipping", job_id, scene.idx)
-            continue
+            if last_successful_image:
+                logger.warning("[%s] Scene %d image missing, falling back to previous image", job_id, scene.idx)
+                image_path = last_successful_image
+            else:
+                logger.warning("[%s] Scene %d image missing and no previous image, skipping", job_id, scene.idx)
+                continue
+        else:
+            last_successful_image = image_path
 
         # Get actual audio duration (prefer TTS duration over plan estimate)
         voice_info = next((v for v in voice_results if v.get("idx") == scene.idx), None)

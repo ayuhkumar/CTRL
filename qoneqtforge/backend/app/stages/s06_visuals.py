@@ -78,13 +78,16 @@ async def run(job_id: str, scene_plan: ScenePlan) -> list[dict]:
 
     async def _bounded_generate(scene) -> dict:
         async with semaphore:
-            return await _generate_scene_image(
+            res = await _generate_scene_image(
                 job_id=job_id,
                 scene_idx=scene.idx,
                 visual_prompt=scene.visual_prompt,
                 style_prefix=scene_plan.style_prefix,
                 stock_query=scene.stock_query,
             )
+            # Sleep 3 seconds between scenes to prevent HF/Pollinations rate limiting
+            await asyncio.sleep(3)
+            return res
 
     tasks = [_bounded_generate(scene) for scene in scene_plan.scenes]
     results = await asyncio.gather(*tasks, return_exceptions=True)
