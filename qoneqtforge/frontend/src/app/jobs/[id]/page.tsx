@@ -33,7 +33,19 @@ export default function JobPage() {
         if (event.type === 'job_complete' || event.type === 'job_failed') setIsLive(false);
       }
     });
-    return cleanup;
+
+    // Fallback polling every 5 seconds to catch missed events if SSE drops
+    const pollInterval = setInterval(() => {
+      getJob(id).then(data => {
+        setJob(data);
+        if (data.status === 'completed' || data.status === 'failed') setIsLive(false);
+      }).catch(console.error);
+    }, 5000);
+
+    return () => {
+      cleanup();
+      clearInterval(pollInterval);
+    };
   }, [id, isLive]);
 
   useEffect(() => {
